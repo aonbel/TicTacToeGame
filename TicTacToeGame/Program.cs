@@ -4,8 +4,22 @@ namespace TicTacToeGame
 {
     class TicTacToeMain
     {
+        // Reads int from console
+        static bool ConsoleReadInt(ref int source)
+        {
+            try
+            {
+                source = int.Parse(Console.ReadLine());
+            }
+            catch (Exception)
+            {
+                return false;
+            }
 
-        // Returns menu choise of player
+            return true;
+        }
+
+        // Returns menu choice of player
         static int MainMenu(string gameTitle, string[] menuComponents)
         {
             int choise = 0;
@@ -218,12 +232,7 @@ namespace TicTacToeGame
 
                 Console.WriteLine("Please input size of the field:");
 
-                try
-                {
-                    size = int.Parse(Console.ReadLine());
-                }
-                catch (Exception)
-                { }
+                ConsoleReadInt(ref size);
             }
 
             char[][] field = new char[size][];
@@ -245,23 +254,25 @@ namespace TicTacToeGame
 
                 PrintField(field);
 
-                int x, y;
+                int x = 0, y = 0;
 
-                try
-                {
-                    Console.WriteLine("Player 1 x coordinate:");
-                    x = int.Parse(Console.ReadLine());
-                    Console.WriteLine("Player 1 y coordinate:");
-                    y = int.Parse(Console.ReadLine());
-                }
-                catch (Exception)
+                Console.WriteLine("Player 1 x coordinate:");
+                if (!ConsoleReadInt(ref x))
                 {
                     Console.WriteLine("Input error(press any button)");
                     Console.ReadKey();
                     continue;
                 }
 
-                if ((x > size && y > size) || field[x - 1][y - 1] != '.')
+                Console.WriteLine("Player 1 y coordinate:");
+                if (!ConsoleReadInt(ref y))
+                {
+                    Console.WriteLine("Input error(press any button)");
+                    Console.ReadKey();
+                    continue;
+                }
+
+                if ((x > size || y > size) || field[x - 1][y - 1] != '.')
                 {
                     Console.WriteLine("Please input cell that is not * or 0(press any button)");
                     Console.ReadKey();
@@ -280,21 +291,24 @@ namespace TicTacToeGame
 
                     PrintField(field);
 
-                    try
-                    {
-                        Console.WriteLine("Player 2 x coordinate:");
-                        x = int.Parse(Console.ReadLine());
-                        Console.WriteLine("Player 2 y coordinate:");
-                        y = int.Parse(Console.ReadLine());
-                    }
-                    catch (Exception)
+                    
+                    Console.WriteLine("Player 2 x coordinate:");
+                    if (!ConsoleReadInt(ref y))
                     {
                         Console.WriteLine("Input error(press any button)");
                         Console.ReadKey();
                         continue;
                     }
 
-                    if ((x > size && y > size) || field[x - 1][y - 1] != '.')
+                    Console.WriteLine("Player 2 y coordinate:");
+                    if (!ConsoleReadInt(ref y))
+                    {
+                        Console.WriteLine("Input error(press any button)");
+                        Console.ReadKey();
+                        continue;
+                    }
+
+                    if ((x > size || y > size) || field[x - 1][y - 1] != '.')
                     {
                         Console.WriteLine("Please input cell that is not * or 0(press any button)");
                         Console.ReadKey();
@@ -345,7 +359,7 @@ namespace TicTacToeGame
 
             while (isRunning)
             {
-                int choise = MainMenu("Tic-tac-toe game", new string[] { "1 player", "2 players", "Exit" });
+                int choise = MainMenu("Tic-tac-toe game", new string[] { "1 player(with bot)", "2 players", "Exit" });
 
                 switch (choise)
                 {
