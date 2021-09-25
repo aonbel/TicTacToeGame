@@ -374,6 +374,8 @@ namespace TicTacToeGame
         }
 
         // Update new possiple combinations
+        // Return true when count of possible combinations is 1 or greater
+        // Otherwise, return true
         static bool UpdateCombinations(ref List<Tuple<string[], int[]>> possibleCombinations, char[][] field, ref int combinationZero, ref int combinationCross, int x, int y, int size, ref int countOfCombinations)
         {
             string possibleDirections = String.Empty;
@@ -381,6 +383,7 @@ namespace TicTacToeGame
 
             countOfCombinations++;
 
+            // Looking for what directions can combination go
             if (x + 2 < size)
             {
                 possibleDirections += 'v';
@@ -398,8 +401,10 @@ namespace TicTacToeGame
                 possibleDirections += 'a';
             }
 
+            // Add this combination to the list of combinations
             possibleCombinations.Add(new Tuple<string[], int[]>(new string[2] { possibleDirections, "hvda" }, new int[2]{ x, y }));
 
+            // Whatching are all combinations correct
             for (int i = possibleCombinations.Count - 1; i > - 1 ;i--)
             {
                 int additionalX = possibleCombinations[i].Item2[0], additionalY = possibleCombinations[i].Item2[1];
