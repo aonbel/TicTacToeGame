@@ -208,7 +208,7 @@ namespace TicTacToeGame
         }
 
         // Prepairs variables for game
-        static void InitializeNewGame(bool twoPlayers)
+        static void InitializeNewGame(bool twoPlayers, bool isCross)
         {
             // Input size of field and field prepairing
 
@@ -245,18 +245,18 @@ namespace TicTacToeGame
 
             // Begin to play
 
-            Game(ref field, ref combinationZero, ref combinationCross, twoPlayers);
+            Game(ref field, ref combinationZero, ref combinationCross, twoPlayers, isCross);
 
             // Conclusion
 
             Console.Clear();
 
             PrintField(field);
-            Console.WriteLine("\nPlayer 1:" + combinationCross + (twoPlayers?"\nPlayer 2:":"\nBot:") + combinationZero + "\n");
+            Console.WriteLine("\nPlayer 1:" + (isCross ? combinationCross:combinationZero) + (twoPlayers?"\nPlayer 2:":"\nBot:") + (isCross ? combinationZero : combinationCross) + "\n");
 
             if (combinationCross > combinationZero)
             {
-                Console.WriteLine("Player 1 wins!!!(press any button)");
+                Console.WriteLine(isCross ? "Player 1 wins!!!(press any button)": twoPlayers?"Player 2 wins!!!(press any button)":"Bot wins!!!(press any button)");
             }
             else if (combinationCross == combinationZero)
             {
@@ -264,14 +264,7 @@ namespace TicTacToeGame
             }
             else 
             {
-                if (twoPlayers)
-                {
-                    Console.WriteLine("Player 2 wins!!!(press any button)");
-                }
-                else
-                {
-                    Console.WriteLine("Bot wins!!!(press any button)");
-                }
+                Console.WriteLine(isCross ? "Player 2 wins!!!(press any button)" : twoPlayers ? "Player 1 wins!!!(press any button)" : "Bot wins!!!(press any button)");
             }
             Console.ReadKey();
         }
@@ -463,13 +456,13 @@ namespace TicTacToeGame
         }
 
         // Starts game
-        static void Game(ref char[][] field, ref int  combinationZero, ref int combinationCross,bool twoPlayers)
+        static void Game(ref char[][] field, ref int  combinationZero, ref int combinationCross, bool twoPlayers, bool isCross)
         {
             int size = field.Length, x = 0, y = 0, n = 0, countOfCombinations = 0;
             List<Tuple<string[], int[]>> possibleCombinations = new List<Tuple<string[], int[]>>();
             bool canContinue = true;
 
-            while (canContinue || canBeNewCombinations(field))
+            while (canContinue || canBeNewCombinations(field) || ((size * size) / 2 <= combinationCross || (size * size) / 2 <= combinationZero))
             {
                 n++;
                 Console.Clear();
@@ -497,13 +490,13 @@ namespace TicTacToeGame
                     Console.WriteLine("Please input cell that is not * or 0(press any button)");
                     Console.ReadKey();
                     continue;
-                }
+                }   
 
-                field[size - y][x - 1] = '*';
+                field[size - y][x - 1] = isCross?'*':'0';
 
                 canContinue = UpdateCombinations(ref possibleCombinations, field, ref combinationZero, ref combinationCross, size - y, x - 1, size, ref countOfCombinations);
 
-                if (!canContinue && !canBeNewCombinations(field))
+                if (!canContinue && !canBeNewCombinations(field) || ((size * size) / 2 <= combinationCross || (size * size) / 2 <= combinationZero))
                 {
                     break;
                 }
@@ -537,15 +530,15 @@ namespace TicTacToeGame
                         continue;
                     }
 
-                    field[size - y][y - 1] = '0';
+                    field[size - y][x - 1] = !isCross ? '*' : '0';
 
                     canContinue = UpdateCombinations(ref possibleCombinations, field, ref combinationZero, ref combinationCross, size - y, x - 1, size, ref countOfCombinations);
                 }
                 else
                 {
                     BotMove(ref field, ref x, ref y);
-                    
-                    field[x][y] = '0';
+
+                    field[x][y] = !isCross ? '*' : '0';
 
 
                     canContinue = UpdateCombinations(ref possibleCombinations, field, ref combinationZero, ref combinationCross, x, y, size, ref countOfCombinations);
@@ -559,17 +552,20 @@ namespace TicTacToeGame
 
             while (isRunning)
             {
-                int choise = MainMenu("Tic-tac-toe game", new string[] { "1 player(with bot)", "2 players", "Exit" });
+                int choise = MainMenu("Tic-tac-toe game", new string[] { "1 player(cross)", "1 player(zero)", "2 players", "Exit" });
 
                 switch (choise)
                 {
                     case 0:
-                        InitializeNewGame(false);
+                        InitializeNewGame(false, true);
                         break;
                     case 1:
-                        InitializeNewGame(true);
+                        InitializeNewGame(false, false);
                         break;
                     case 2:
+                        InitializeNewGame(true, true);
+                        break;
+                    case 3:
                         isRunning = false;
                         break;
                 }
