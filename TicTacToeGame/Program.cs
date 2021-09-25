@@ -436,23 +436,22 @@ namespace TicTacToeGame
                         l = -1;
                     }
                 }
-                
-                if (possibleCombinations[i].Item1[1] == String.Empty)
-                {
-                    possibleCombinations.RemoveAt(i);
-                    i = possibleCombinations.Count;
-                }
+            }
+
+            if (size * size != possibleCombinations.Count)
+            {
+                return true;
             }
 
             for (int i = 0;i < possibleCombinations.Count;i++)
             {
                 if (possibleCombinations[i].Item1[0] != String.Empty)
                 {
-                    return false;
+                    return true;
                 }
             }
 
-            return true;
+            return false;
         }
 
         // Starts game
@@ -462,7 +461,7 @@ namespace TicTacToeGame
             List<Tuple<string[], int[]>> possibleCombinations = new List<Tuple<string[], int[]>>();
             bool canContinue = true;
 
-            while (canContinue || canBeNewCombinations(field) || ((size * size) / 2 <= combinationCross || (size * size) / 2 <= combinationZero))
+            while (canContinue && canBeNewCombinations(field))
             {
                 n++;
                 Console.Clear();
@@ -496,7 +495,7 @@ namespace TicTacToeGame
 
                 canContinue = UpdateCombinations(ref possibleCombinations, field, ref combinationZero, ref combinationCross, size - y, x - 1, size, ref countOfCombinations);
 
-                if (!canContinue && !canBeNewCombinations(field) || ((size * size) / 2 <= combinationCross || (size * size) / 2 <= combinationZero))
+                if (!canContinue && !canBeNewCombinations(field))
                 {
                     break;
                 }
@@ -508,7 +507,7 @@ namespace TicTacToeGame
                     PrintField(field);
 
                     Console.WriteLine("Player 2 x coordinate:");
-                    if (!ConsoleReadInt(ref y))
+                    if (!ConsoleReadInt(ref x))
                     {
                         Console.WriteLine("Input error(press any button)");
                         Console.ReadKey();
