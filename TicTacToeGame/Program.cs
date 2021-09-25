@@ -277,14 +277,19 @@ namespace TicTacToeGame
         }
 
         // Remove not possible combinations and update count of combinations
-        static void RemoveNotPossibleCombinationsAndUpdateCountOfCombinations(ref List<Tuple<string, int[]>> possibleCombinations, char[][] field, ref int combinationZero, ref int combinationCross,char letter, int comparison, int x, int y, int number)
+        static void RemoveNotPossibleCombinationsAndUpdateCountOfCombinations(ref List<Tuple<string[], int[]>> possibleCombinations, char[][] field, ref int combinationZero, ref int combinationCross,char letter, int comparison, int x, int y, int number)
         {
+            if (possibleCombinations[number].Item1[1].IndexOf(letter) == -1)
+            {
+                comparison = 1;
+            }
+
             if (comparison == 0)
             {
                 return;
             }
 
-            if (comparison > 1)
+            if (comparison != 1)
             {
                 for (int j = 0;j < possibleCombinations.Count; j++)
                 {
@@ -294,65 +299,87 @@ namespace TicTacToeGame
                         case 'v':
                             if ((x + 1 == combination[0] && y == combination[1]) || (x + 2 == combination[0] && y == combination[1]))
                             {
-                                int index = possibleCombinations[j].Item1.IndexOf(letter);
-                                if (index > -1 && (field[combination[0]][combination[1]] == field[x][y]))
+                                int index1 = possibleCombinations[j].Item1[1].IndexOf(letter);
+                                if (index1 != -1 && (field[combination[0]][combination[1]] == field[x][y]))
                                 {
-                                   possibleCombinations[j] = new Tuple<string, int[]>(possibleCombinations[j].Item1.Remove(index, 1), possibleCombinations[j].Item2);
+                                    possibleCombinations[j] = new Tuple<string[], int[]>(new string[2] { possibleCombinations[j].Item1[0], possibleCombinations[j].Item1[1].Remove(index1, 1) }, possibleCombinations[j].Item2);
+                                }
+                                else if (index1 == -1)
+                                {
+                                    return;
                                 }
                             }
                             break;
                         case 'h':
                             if ((x == combination[0] && y + 1 == combination[1]) || (x == combination[0] && y + 2 == combination[1]))
                             {
-                                int index = possibleCombinations[j].Item1.IndexOf(letter);
-                                if (index > -1 && (field[combination[0]][combination[1]] == field[x][y]))
+                                int index1 = possibleCombinations[j].Item1[1].IndexOf(letter);
+                                if (index1 != -1 && (field[combination[0]][combination[1]] == field[x][y]))
                                 {
-                                    possibleCombinations[j] = new Tuple<string, int[]>(possibleCombinations[j].Item1.Remove(index, 1), possibleCombinations[j].Item2);
+                                    possibleCombinations[j] = new Tuple<string[], int[]>(new string[2] { possibleCombinations[j].Item1[0], possibleCombinations[j].Item1[1].Remove(index1, 1) }, possibleCombinations[j].Item2);
+                                }
+                                else if (index1 == -1)
+                                {
+                                    return;
                                 }
                             }
                             break;
                         case 'd':
                             if ((x + 1 == combination[0] && y + 1 == combination[1]) || (x + 2 == combination[0] && y + 2 == combination[1]))
                             {
-                                int index = possibleCombinations[j].Item1.IndexOf(letter);
-                                if (index > -1 && (field[combination[0]][combination[1]] == field[x][y]))
+                                int index1 = possibleCombinations[j].Item1[1].IndexOf(letter);
+                                if (index1 != -1 && (field[combination[0]][combination[1]] == field[x][y]))
                                 {
-                                    possibleCombinations[j] = new Tuple<string, int[]>(possibleCombinations[j].Item1.Remove(index, 1), possibleCombinations[j].Item2);
+                                    possibleCombinations[j] = new Tuple<string[], int[]>(new string[2] { possibleCombinations[j].Item1[0], possibleCombinations[j].Item1[1].Remove(index1, 1) }, possibleCombinations[j].Item2);
+                                }
+                                else if (index1 == -1)
+                                {
+                                    return;
                                 }
                             }
                             break;
                         case 'a':
                             if ((x + 1 == combination[0] && y - 1 == combination[1]) || (x + 2 == combination[0] && y - 2 == combination[1]))
                             {
-                                int index = possibleCombinations[j].Item1.IndexOf(letter);
-                                if (index > -1 && (field[combination[0]][combination[1]] == field[x][y]))
+                                int index1 = possibleCombinations[j].Item1[1].IndexOf(letter);
+                                if (index1 != -1 && (field[combination[0]][combination[1]] == field[x][y]))
                                 {
-                                    possibleCombinations[j] = new Tuple<string, int[]>(possibleCombinations[j].Item1.Remove(index, 1), possibleCombinations[j].Item2);
+                                    possibleCombinations[j] = new Tuple<string[], int[]>(new string[2] { possibleCombinations[j].Item1[0], possibleCombinations[j].Item1[1].Remove(index1, 1) }, possibleCombinations[j].Item2);
+                                }
+                                else if (index1 == -1)
+                                {
+                                    return;
                                 }
                             }
                             break;
                     }
                 }
+
+                if (comparison == 2)
+                {
+                    combinationCross++;
+                }
+                else if (comparison == 3)
+                {
+                    combinationZero++;
+                }
+
+
+                int indexOfLet = possibleCombinations[number].Item1[1].IndexOf(letter);
+                possibleCombinations[number] = new Tuple<string[], int[]>(new string[2] { possibleCombinations[number].Item1[0], possibleCombinations[number].Item1[1].Remove(indexOfLet, 1) }, possibleCombinations[number].Item2);
             }
 
-            if (comparison == 2)
-            {
-                combinationCross++;
-            }
-            else if (comparison == 3)
-            {
-                combinationZero++;
-            }
-
-            int indexOfLetter = possibleCombinations[number].Item1.IndexOf(letter);
-            possibleCombinations[number] = new Tuple<string, int[]>(possibleCombinations[number].Item1.Remove(indexOfLetter, 1), possibleCombinations[number].Item2);
+            int indexOfLetter = possibleCombinations[number].Item1[0].IndexOf(letter);
+            possibleCombinations[number] = new Tuple<string[], int[]>(new string[2] { possibleCombinations[number].Item1[0].Remove(indexOfLetter, 1), possibleCombinations[number].Item1[1] }, possibleCombinations[number].Item2);
         }
 
         // Update new possiple combinations
-        static void UpdateCombinations(ref List<Tuple<string, int[]>> possibleCombinations, char[][] field ,ref int combinationZero, ref int combinationCross, int x, int y, int size)
+        static bool UpdateCombinations(ref List<Tuple<string[], int[]>> possibleCombinations, char[][] field, ref int combinationZero, ref int combinationCross, int x, int y, int size, ref int countOfCombinations)
         {
             string possibleDirections = String.Empty;
             int comparison;
+
+            countOfCombinations++;
 
             if (x + 2 < size)
             {
@@ -371,12 +398,12 @@ namespace TicTacToeGame
                 possibleDirections += 'a';
             }
 
-            possibleCombinations.Add(new Tuple<string, int[]>(possibleDirections, new int[2]{ x, y }));
+            possibleCombinations.Add(new Tuple<string[], int[]>(new string[2] { possibleDirections, "hvda" }, new int[2]{ x, y }));
 
-            for (int i = 0;i < possibleCombinations.Count;i++)
+            for (int i = possibleCombinations.Count - 1; i > - 1 ;i--)
             {
                 int additionalX = possibleCombinations[i].Item2[0], additionalY = possibleCombinations[i].Item2[1];
-                possibleDirections = possibleCombinations[i].Item1;
+                possibleDirections = possibleCombinations[i].Item1[0];
 
                 for (int l = 0;l < possibleDirections.Length;l++)
                 {
@@ -385,47 +412,59 @@ namespace TicTacToeGame
                         case 'h':
                             comparison = ComparisonBetween(field[additionalX][additionalY], field[additionalX][additionalY + 1], field[additionalX][additionalY + 2]);
 
-                            RemoveNotPossibleCombinationsAndUpdateCountOfCombinations(ref possibleCombinations, field, ref combinationZero, ref combinationCross, possibleDirections[l], comparison, additionalX, additionalY, i);
+                            RemoveNotPossibleCombinationsAndUpdateCountOfCombinations(ref possibleCombinations, field, ref combinationZero, ref combinationCross, 'h', comparison, additionalX, additionalY, i);
                             break;
                         case 'v':
                             comparison = ComparisonBetween(field[additionalX][additionalY], field[additionalX + 1][additionalY], field[additionalX + 2][additionalY]);
 
-                            RemoveNotPossibleCombinationsAndUpdateCountOfCombinations(ref possibleCombinations, field, ref combinationZero, ref combinationCross, possibleDirections[l], comparison, additionalX, additionalY, i);
+                            RemoveNotPossibleCombinationsAndUpdateCountOfCombinations(ref possibleCombinations, field, ref combinationZero, ref combinationCross, 'v', comparison, additionalX, additionalY, i);
                             break;
                         case 'd':
                             comparison = ComparisonBetween(field[additionalX][additionalY], field[additionalX + 1][additionalY + 1], field[additionalX + 2][additionalY + 2]);
 
-                            RemoveNotPossibleCombinationsAndUpdateCountOfCombinations(ref possibleCombinations, field, ref combinationZero, ref combinationCross, possibleDirections[l], comparison, additionalX, additionalY, i);
+                            RemoveNotPossibleCombinationsAndUpdateCountOfCombinations(ref possibleCombinations, field, ref combinationZero, ref combinationCross, 'd', comparison, additionalX, additionalY, i);
                             break;
                         case 'a':
                             comparison = ComparisonBetween(field[additionalX][additionalY], field[additionalX + 1][additionalY - 1], field[additionalX + 2][additionalY - 2]);
 
-                            RemoveNotPossibleCombinationsAndUpdateCountOfCombinations(ref possibleCombinations, field, ref combinationZero, ref combinationCross, possibleDirections[l], comparison, additionalX, additionalY, i);
+                            RemoveNotPossibleCombinationsAndUpdateCountOfCombinations(ref possibleCombinations, field, ref combinationZero, ref combinationCross, 'a', comparison, additionalX, additionalY, i);
                             break;
                     }
 
-                    if (possibleCombinations[i].Item1 != possibleDirections)
+                    if (possibleCombinations[i].Item1[0] != possibleDirections)
                     {
-                        possibleDirections = possibleCombinations[i].Item1;
+                        possibleDirections = possibleCombinations[i].Item1[0];
 
                         l = -1;
                     }
                 }
                 
-                if (possibleCombinations[i].Item1 == String.Empty)
+                if (possibleCombinations[i].Item1[1] == String.Empty)
                 {
-                    possibleCombinations.RemoveAt(i--);
+                    possibleCombinations.RemoveAt(i);
+                    i = possibleCombinations.Count;
                 }
             }
+
+            for (int i = 0;i < possibleCombinations.Count;i++)
+            {
+                if (possibleCombinations[i].Item1[0] != String.Empty)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         // Starts game
         static void Game(ref char[][] field, ref int  combinationZero, ref int combinationCross,bool twoPlayers)
         {
-            int size = field.Length, x = 0, y = 0, n = 0;
-            List<Tuple<string, int[]>> possibleCombinations = new List<Tuple<string, int[]>>();
+            int size = field.Length, x = 0, y = 0, n = 0, countOfCombinations = 0;
+            List<Tuple<string[], int[]>> possibleCombinations = new List<Tuple<string[], int[]>>();
+            bool canContinue = true;
 
-            while (possibleCombinations.Count > 0 || canBeNewCombinations(field))
+            while (canContinue || canBeNewCombinations(field))
             {
                 n++;
                 Console.Clear();
@@ -457,10 +496,9 @@ namespace TicTacToeGame
 
                 field[size - y][x - 1] = '*';
 
+                canContinue = UpdateCombinations(ref possibleCombinations, field, ref combinationZero, ref combinationCross, size - y, x - 1, size, ref countOfCombinations);
 
-                UpdateCombinations(ref possibleCombinations, field, ref combinationZero, ref combinationCross, size - y, x - 1, size);
-
-                if (possibleCombinations.Count == 0 && !canBeNewCombinations(field))
+                if (!canContinue && !canBeNewCombinations(field))
                 {
                     break;
                 }
@@ -470,7 +508,6 @@ namespace TicTacToeGame
                     Console.Clear();
 
                     PrintField(field);
-
 
                     Console.WriteLine("Player 2 x coordinate:");
                     if (!ConsoleReadInt(ref y))
@@ -497,15 +534,16 @@ namespace TicTacToeGame
 
                     field[size - y][y - 1] = '0';
 
-                    UpdateCombinations(ref possibleCombinations, field, ref combinationZero, ref combinationCross, size - y, x - 1, size);
+                    canContinue = UpdateCombinations(ref possibleCombinations, field, ref combinationZero, ref combinationCross, size - y, x - 1, size, ref countOfCombinations);
                 }
                 else
                 {
                     BotMove(ref field, ref x, ref y);
-
+                    
                     field[x][y] = '0';
 
-                    UpdateCombinations(ref possibleCombinations, field, ref combinationZero, ref combinationCross, x, y, size);
+
+                    canContinue = UpdateCombinations(ref possibleCombinations, field, ref combinationZero, ref combinationCross, x, y, size, ref countOfCombinations);
                 }
             }
         }
