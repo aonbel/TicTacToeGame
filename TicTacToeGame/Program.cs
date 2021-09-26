@@ -252,11 +252,11 @@ namespace TicTacToeGame
             Console.Clear();
 
             PrintField(field);
-            Console.WriteLine("\nPlayer 1:" + (isCross ? combinationCross:combinationZero) + (twoPlayers?"\nPlayer 2:":"\nBot:") + (isCross ? combinationZero : combinationCross) + "\n");
+            Console.WriteLine("\nPlayer one : " + (isCross ? combinationCross:combinationZero) + (twoPlayers?"\nPlayer two : ":"\nBot : ") + (isCross ? combinationZero : combinationCross) + "\n");
 
             if (combinationCross > combinationZero)
             {
-                Console.WriteLine(isCross ? "Player 1 wins!!!(press any button)": twoPlayers?"Player 2 wins!!!(press any button)":"Bot wins!!!(press any button)");
+                Console.WriteLine(isCross ? "Player one wins!!!(press any button)": twoPlayers?"Player two wins!!!(press any button)":"Bot wins!!!(press any button)");
             }
             else if (combinationCross == combinationZero)
             {
@@ -264,7 +264,7 @@ namespace TicTacToeGame
             }
             else 
             {
-                Console.WriteLine(isCross ? "Player 2 wins!!!(press any button)" : twoPlayers ? "Player 1 wins!!!(press any button)" : "Bot wins!!!(press any button)");
+                Console.WriteLine(isCross ? "Player two wins!!!(press any button)" : twoPlayers ? "Player one wins!!!(press any button)" : "Bot wins!!!(press any button)");
             }
             Console.ReadKey();
         }
